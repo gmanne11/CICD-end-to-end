@@ -9,11 +9,11 @@ pipeline {
     stages {
         
         stage('Checkout'){
-           steps {
+            steps {
                 git credentialsId: '889e6fb2-cc60-4288-9d61-198b6822497a', 
-                url: 'https://github.com/gmanne11/CICD-end-to-end.git',
-                branch: 'main'
-           }
+                    url: 'https://github.com/gmanne11/CICD-end-to-end.git',
+                    branch: 'main'
+            }
         }
 
         stage('Build Docker'){
@@ -28,7 +28,7 @@ pipeline {
         }
 
         stage('Push the artifacts'){
-           steps{
+            steps{
                 script{
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh '''
@@ -37,6 +37,7 @@ pipeline {
                         echo 'Pushing to Repository'
                         docker push vivekmanne/cicd-e2e:${BUILD_NUMBER}
                         '''
+                    }
                 }
             }
         }
@@ -44,8 +45,8 @@ pipeline {
         stage('Checkout K8S manifest SCM'){
             steps {
                 git credentialsId: '889e6fb2-cc60-4288-9d61-198b6822497a', 
-                url: 'https://github.com/gmanne11/CICD-end-to-end.git',
-                branch: 'main'
+                    url: 'https://github.com/gmanne11/CICD-end-to-end.git',
+                    branch: 'main'
             }
         }
         
@@ -68,5 +69,4 @@ pipeline {
             }
         }
     }
-}
 }
