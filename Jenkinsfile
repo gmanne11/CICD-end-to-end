@@ -30,10 +30,13 @@ pipeline {
         stage('Push the artifacts'){
            steps{
                 script{
-                    sh '''
-                    echo 'Push to Repo'
-                    docker push vivekmanne/cicd-e2e:${BUILD_NUMBER}
-                    '''
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                        echo 'Logging into Docker Hub'
+                        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                        echo 'Pushing to Repository'
+                        docker push vivekmanne/cicd-e2e:${BUILD_NUMBER}
+                        '''
                 }
             }
         }
