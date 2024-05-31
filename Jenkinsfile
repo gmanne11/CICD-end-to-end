@@ -15,7 +15,13 @@ pipeline {
                     branch: 'main'
             }
         }
-
+        stage('Show Build Number') {
+            steps {
+                script {
+                    echo "The build number is: ${BUILD_NUMBER}"
+                }
+            }
+        }
         stage('Build Docker'){
             steps{
                 script{
