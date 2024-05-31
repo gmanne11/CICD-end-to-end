@@ -31,7 +31,7 @@ pipeline {
                 script{
                     sh '''
                     echo 'Build Docker Image'
-                    docker build -t vivekmanne/cicd-e2e:${IMAGE_TAG} .
+                    docker build -t vivekmanne/cicd-e2e: ${IMAGE_TAG} .
                     '''
                 }
             }
