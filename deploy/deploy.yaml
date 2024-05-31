@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: todo
-        image: vivekmanne/cicd-e2e:20
+        image: vivekmanne/cicd-e2e:$IMAGE_TAG
         ports:
         - containerPort: 8000
