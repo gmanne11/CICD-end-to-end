@@ -63,7 +63,7 @@ pipeline {
                         sh '''
                         cd deploy
                         cat deploy.yaml
-                        sed -i "s|image: vivekmanne/cicd-e2e:\(.*\)|image: vivekmanne/cicd-e2e:${BUILD_NUMBER}|g" deploy.yaml
+                        sed -i "s/cicd-e2e:/cicd-e2e: $BUILD_NUMBER/g" deploy.yaml
                         cat deploy.yaml
                         git config --global user.email "gopim4959@gmail.com"
                         git config --global user.name "gmanne11"
