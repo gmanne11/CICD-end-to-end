@@ -1,9 +1,9 @@
 pipeline {
-    
     agent any 
     
     environment {
-        IMAGE_TAG = "${BUILD_NUMBER}"
+        // Use a variable to store the image tag (build number)
+        IMAGE_TAG = ""
     }
     
     stages {
@@ -15,19 +15,23 @@ pipeline {
                     branch: 'main'
             }
         }
+        
         stage('Show Build Number') {
             steps {
                 script {
-                    echo "The build number is: ${BUILD_NUMBER}"
+                    // Dynamically extract the build number
+                    IMAGE_TAG = sh(script: 'echo ${BUILD_NUMBER}', returnStdout: true).trim()
+                    echo "The build number is: ${IMAGE_TAG}"
                 }
             }
         }
+        
         stage('Build Docker'){
             steps{
                 script{
                     sh '''
-                    echo 'Buid Docker Image'
-                    docker build -t vivekmanne/cicd-e2e:${BUILD_NUMBER} .
+                    echo 'Build Docker Image'
+                    docker build -t vivekmanne/cicd-e2e: 25${IMAGE_TAG} .
                     '''
                 }
             }
@@ -41,7 +45,7 @@ pipeline {
                         echo 'Logging into Docker Hub'
                         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
                         echo 'Pushing to Repository'
-                        docker push vivekmanne/cicd-e2e:${BUILD_NUMBER}
+                        docker push vivekmanne/cicd-e2e: 25${IMAGE_TAG}
                         '''
                     }
                 }
@@ -59,11 +63,11 @@ pipeline {
         stage('Update K8S manifest & push to Repo'){
             steps {
                 script{
-                     withCredentials([string(credentialsId: 'Github-PAT', variable: 'GITHUB_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'Github-PAT', variable: 'GITHUB_TOKEN')]) {
                         sh '''
                         cd deploy
                         cat deploy.yaml
-                        sed -i "s|vivekmanne/cicd-e2e:$IMAGE_TAG|vivekmanne/cicd-e2e:${BUILD_NUMBER}|" deploy.yaml
+                        sed -i "s|vivekmanne/cicd-e2e: 25.*|vivekmanne/cicd-e2e: 25${IMAGE_TAG}|" deploy.yaml
                         cat deploy.yaml
                         git config --global user.email "gopim4959@gmail.com"
                         git config --global user.name "gmanne11"
